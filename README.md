@@ -7,10 +7,18 @@ This script is run on Google Scripts
 * [The utilized Google Sheets](https://docs.google.com/spreadsheets/d/1aChvreatc2_in1ZPchH0TAJ1vdyH241BnxPNMLyJZbQ/edit?usp=sharing)
 
 ## Current Features
+
+Telegram Bot
+
 * Appending information into gsheets from telegram bot chat
 * Extracting information from gsheets to telegram bot chat
 * Dynamic Inline Keyboard based on number of items in specified column in gsheets
 * Pseudo-chatbot guided-reply system to obtain information from user for logging into the gsheets 
+
+Google Sheets
+
+* Auto sorting to resemble a *Favourites* function when logging for items under the Food category
+
 
 ## Future Plans
 * To Do List that is interactable (whether task is done or not)
