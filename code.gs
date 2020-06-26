@@ -8,11 +8,8 @@ var spreadsheeturl = "___";
 var devid = "__";
 var categories = [];
 var catqty = 0;
+var settingssheet = SpreadsheetApp.openById(spreadsheeturl).getSheetByName("settings");
 
-var selectedcat = "empty";
-var selecteditem = "empty";
-var selectedcost = "empty";
-  
 
 function setWebhook() {
   var response = UrlFetchApp.fetch(url + "setWebhook?url=" + webAppURL);
@@ -27,12 +24,10 @@ Logger.log(response.getContentText());
 */
 
 
-
-
 function sendText(id, text) {
   var response = UrlFetchApp.fetch(url + "sendMessage?chat_id=" + id + "&text=" + text);
-  //Logger.log(response.getContentText())
 }
+
 
 function sendkeeb(chatId, text, keyBoard) {
   var data = {
@@ -48,11 +43,10 @@ function sendkeeb(chatId, text, keyBoard) {
   UrlFetchApp.fetch(url, data);
 }
 
+
 //obtain all categories available
 function getCats() {
-  var settingssheet = SpreadsheetApp.openById(spreadsheeturl).getSheetByName("settings");
   var catqty = settingssheet.getRange(2,2).getValue();
-  
   var categories = new Array();
   for(var i = 0; i < catqty; i++) {
     categories.push(settingssheet.getRange(2+i,3).getValue());
@@ -67,11 +61,38 @@ function getCats() {
 }
 
 
+function doTest() {
+  sendText(devid, "*test*");
+}
+
+//rudimentary method to create a pseudo chatbot
+//using checks to see if previous detail haven been filled to accept new inputs
+//clear all to reset
+function clearitems(){
+  var selectedcat = settingssheet.getRange(1,6).setValue("empty");
+  var selecteditem = settingssheet.getRange(2,6).setValue("empty");
+  var selectedcost = settingssheet.getRange(3,6).setValue("empty");
+}
 
 
+//code to add information directly onto the sheet
+function appen( sheet, category, item, cost) {
+  
+  var spreads = SpreadsheetApp.openById(spreadsheeturl);
+  var selectsheet = spreads.getSheetByName(sheet) ? spreads.getSheetByName(sheet) : spreads.insertSheet(sheet); 
+  selectsheet.appendRow([new Date(), category, item, cost]);
+  
+}
 
+
+//runs when event occurs
 function doPost(e) {
-
+  //getRange(y,x)
+  var selectedcat = settingssheet.getRange(1,6);
+  var selecteditem = settingssheet.getRange(2,6);
+  var selectedcost = settingssheet.getRange(3,6);
+  
+  
   //parse webapp data
   var contents = JSON.parse(e.postData.contents);
   
@@ -80,10 +101,10 @@ function doPost(e) {
     if(JSON.stringify(id_callback) == devid) {
       
       var data = contents.callback_query.data;
-
-//      selectedcat = data;
-//      sendText(id_callback, "What was this " + selectedcat + " item?");
-//      sendText(devid, selectedcat);
+      
+      selectedcat.setValue(data);
+      sendText(id_callback, "What was this " + selectedcat.getValue() + " item?");
+      //sendText(devid, selectedcat.getValue());
       
     }
     else {
@@ -97,21 +118,10 @@ function doPost(e) {
     var item = text.split("=");
     var firstName = contents.message.from.first_name;
     
+    
     //id checker
     if(JSON.stringify(uid) == devid) 
     {
-      //sendText(devid, "error 1 " + text);
-      
-//      sendText(devid, selecteditem);
-      //check if it is a reply to "what Item"
-      if(selectedcat != "empty") {
-        sendText(devid, "error2");
-        selecteditem = text;
-        sendText(uid, "How much did " + selecteditem + "cost?");
-        sendText(devid, "cat " + selectedcat + ". item " + selecteditem);
-      }
-
-      
       
       //check if it was a command key
       // command key = "."
@@ -128,25 +138,42 @@ function doPost(e) {
           getCats();
         }
         
-        //function #2
-        if(func == "log"){
-          
-          //sendText(uid, "1");
-          
-          var input = text.replace(".log ","");
-          
-          //.log food, chicken wing, $3
-          var category = input.split(",")[0];
-          var item = input.split(",")[1];
-          var cost = input.split(",")[2];
-          var spreads = SpreadsheetApp.openById(spreadsheeturl);
-          var sheet = spreads.getSheetByName(func) ? spreads.getSheetByName(func) : spreads.insertSheet(func); 
-          sheet.appendRow([new Date(), category, item, cost]);
-          sendText(uid, item + " has been logged into " + func );  
-          
-        }
+        //alternative method to log with single line input separated by ","
+        //        //function #2
+        //        if(func == "log"){
+        //          
+        //          //sendText(uid, "1");
+        //          
+        //          var input = text.replace(".log ","");
+        //          
+        //          //.log food, chicken wing, $3
+        //          var category = input.split(",")[0];
+        //          var item = input.split(",")[1];
+        //          var cost = input.split(",")[2];
+        //          var spreads = SpreadsheetApp.openById(spreadsheeturl);
+        //          var sheet = spreads.getSheetByName(func) ? spreads.getSheetByName(func) : spreads.insertSheet(func); 
+        //          sheet.appendRow([new Date(), category, item, cost]);
+        //          sendText(uid, item + " has been logged into " + func );  
+        //          
+        //        }
+      }
+      
+      if(selecteditem.getValue() != "empty") {
+        selectedcost.setValue(text);
+        sendText(uid, selecteditem.getValue() + " was logged under " + selectedcat.getValue() + " at the cost of " + selecteditem.getValue());
+        appen("log", selectedcat.getValue(), selecteditem.getValue(), selectedcost.getValue());
+        clearitems();
         
       }
+      
+      if(selectedcat.getValue() != "empty") {
+        selecteditem.setValue(text);
+        sendText(uid, "How much did " + selecteditem.getValue() + " cost?");
+        
+      }
+      
+      
+      
     }
     else
     {
