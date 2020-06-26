@@ -3,6 +3,9 @@ A small project to create a Telegram bot that interacts with Google Sheets
 
 This script is run on Google Scripts
 
+## Resources
+* [The utilized Google Sheets](https://docs.google.com/spreadsheets/d/1aChvreatc2_in1ZPchH0TAJ1vdyH241BnxPNMLyJZbQ/edit?usp=sharing)
+
 ## Current Features
 * Appending information into gsheets from telegram bot chat
 * Extracting information from gsheets to telegram bot chat
