@@ -33,7 +33,7 @@ Google Sheets
 ![gsheets](/images/sheetssheets.PNG) 
 
 
-Refer to gsheets link under *Resources* for updated information
+Refer to gsheets link under *Resources* for more information (ie; scripts in gsheets and layout)
 
 ## Acknowledgements/References
 * [Wim's Coding YT](https://www.youtube.com/watch?v=24EyItKfm50&t=2s&ab_channel=Wim%27sCodingSecrets)
