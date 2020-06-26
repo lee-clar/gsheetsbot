@@ -13,7 +13,7 @@ This script is run on Google Scripts
 * Retrieval of specific expenditure by category, or date
 
 ## Images
-![Telegram Bot](/images/sheetsbot.PNG) 
+![Telegram Bot](/images/sheetsbot2.PNG) 
 ![gsheets](/images/gsheetssheets.PNG) 
 
 ## Acknowledgements/References
