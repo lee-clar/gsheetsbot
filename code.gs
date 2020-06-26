@@ -115,7 +115,6 @@ function doPost(e) {
   } else if (contents.message) {
     var uid = contents.message.from.id; 
     var text = contents.message.text; 
-    var item = text.split("=");
     var firstName = contents.message.from.first_name;
     
     
@@ -138,7 +137,7 @@ function doPost(e) {
           getCats();
         }
         
-        //alternative method to log with single line input separated by ","
+        //        //alternative method to log with single line input separated by ","
         //        //function #2
         //        if(func == "log"){
         //          
