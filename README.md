@@ -14,6 +14,7 @@ Telegram Bot
 * Extracting information from gsheets to telegram bot chat
 * Dynamic Inline Keyboard based on number of items in specified column in gsheets
 * Pseudo-chatbot guided-reply system to obtain information from user for logging into the gsheets 
+* Ability to click from a Favourites list when logging for items under Food category
 
 
 Google Sheets
