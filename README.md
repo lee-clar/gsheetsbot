@@ -15,6 +15,7 @@ Telegram Bot
 * Dynamic Inline Keyboard based on number of items in specified column in gsheets
 * Pseudo-chatbot guided-reply system to obtain information from user for logging into the gsheets 
 
+
 Google Sheets
 
 * Auto sorting to resemble a *Favourites* function when logging for items under the Food category
@@ -29,9 +30,8 @@ Google Sheets
 ## Images
 ![Telegram Bot](/images/gsheetsbot.PNG) 
 
-![gsheets](/images/gsheetssheets2.PNG) 
+![gsheets](/images/sheetssheets.PNG) 
 
-![gsheets](/images/gsheetssheets3.PNG) 
 
 Refer to gsheets link under *Resources* for updated information
 
