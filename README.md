@@ -19,11 +19,12 @@ This script is run on Google Scripts
 * Expand on other possible uses of Telegram Bot with Google Scripts (focusing on gsheets)
 
 ## Images
-![Telegram Bot](/images/sheetsbot2.PNG) 
+![Telegram Bot](/images/gsheetsbot.PNG) 
 
 ![gsheets](/images/gsheetssheets2.PNG) 
 
 ![gsheets](/images/gsheetssheets3.PNG) 
+Refer to gsheets link for updated information
 
 ## Acknowledgements/References
 * [Wim's Coding YT](https://www.youtube.com/watch?v=24EyItKfm50&t=2s&ab_channel=Wim%27sCodingSecrets)
