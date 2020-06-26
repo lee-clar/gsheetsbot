@@ -7,10 +7,13 @@ This script is run on Google Scripts
 * Appending information into gsheets from telegram bot chat
 * Extracting information from gsheets to telegram bot chat
 * Dynamic Inline Keyboard based on number of items in specified column in gsheets
+* Pseudo-chatbot guided-reply system to obtain information from user for logging into the gsheets 
 
 ## Future Plans
 * To Do List that is interactable (done or not done)
-* Retrieval of specific expenditure by category, or date
+* Method to keep private chat clean (either through deletion of messages or editing of inlinekeyboard)
+* Retrieval of specific expenditure by category or date
+* Expand on other possible uses of Telegram Bot with Google Scripts (focusing on gsheets)
 
 ## Images
 ![Telegram Bot](/images/sheetsbot2.PNG) 
