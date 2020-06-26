@@ -10,7 +10,7 @@ This script is run on Google Scripts
 * Pseudo-chatbot guided-reply system to obtain information from user for logging into the gsheets 
 
 ## Future Plans
-* To Do List that is interactable (done or not done)
+* To Do List that is interactable (whether task is done or not)
 * Method to keep private chat clean (either through deletion of messages or editing of inlinekeyboard)
 * Retrieval of specific expenditure by category or date
 * Expand on other possible uses of Telegram Bot with Google Scripts (focusing on gsheets)
