@@ -14,7 +14,10 @@ This script is run on Google Scripts
 
 ## Images
 ![Telegram Bot](/images/sheetsbot2.PNG) 
-![gsheets](/images/gsheetssheets.PNG) 
+
+![gsheets](/images/gsheetssheets2.PNG) 
+
+![gsheets](/images/gsheetssheets3.PNG) 
 
 ## Acknowledgements/References
 * [Wim's Coding YT](https://www.youtube.com/watch?v=24EyItKfm50&t=2s&ab_channel=Wim%27sCodingSecrets)
