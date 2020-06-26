@@ -160,7 +160,7 @@ function doPost(e) {
       
       if(selecteditem.getValue() != "empty") {
         selectedcost.setValue(text);
-        sendText(uid, selecteditem.getValue() + " was logged under " + selectedcat.getValue() + " at the cost of " + selecteditem.getValue());
+        sendText(uid, selecteditem.getValue() + " was logged under " + selectedcat.getValue() + " at the cost of " + selectedcost.getValue());
         appen("log", selectedcat.getValue(), selecteditem.getValue(), selectedcost.getValue());
         clearitems();
         
