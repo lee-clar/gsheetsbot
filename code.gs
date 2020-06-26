@@ -23,12 +23,15 @@ Logger.log(response.getContentText());
 }
 */
 
-
+//send ordinary string message to user
 function sendText(id, text) {
   var response = UrlFetchApp.fetch(url + "sendMessage?chat_id=" + id + "&text=" + text);
 }
 
 
+//send message from Bot to user
+//sendkeeb includes the markup for inlinekeyboard
+//if not utilizing inline keyboard, use sendText
 function sendkeeb(chatId, text, keyBoard) {
   var data = {
     method: "post",
@@ -45,6 +48,7 @@ function sendkeeb(chatId, text, keyBoard) {
 
 
 //obtain all categories available
+//categories can be editted on the sheets
 function getCats() {
   var catqty = settingssheet.getRange(2,2).getValue();
   var categories = new Array();
@@ -61,9 +65,29 @@ function getCats() {
 }
 
 
-function doTest() {
-  sendText(devid, "*test*");
+//creates a dynamic inline keyboard based on the most updated top Food items
+function checkfavs() {
+  var favqty = settingssheet.getRange(2,8).getValue();
+  if (favqty > 5){favqty = 5;}
+  var favs = new Array();
+  for(var i = 0; i < favqty; i++) {
+    favs.push(settingssheet.getRange(1+i,11).getValue());
+  }
+  
+  var keeboard = new Array();
+  for(var i = 0; i< favqty; i++) {
+    keeboard.push([{"text": favs[i], 'callback_data': favs[i]}]);
+  }
+  
+  sendkeeb(devid, "Here are your favourite foods", keeboard);
+  
 }
+
+
+//function doTest() {
+//  sendText(devid, "*test*");
+//}
+
 
 //rudimentary method to create a pseudo chatbot
 //using checks to see if previous detail haven been filled to accept new inputs
@@ -96,15 +120,36 @@ function doPost(e) {
   //parse webapp data
   var contents = JSON.parse(e.postData.contents);
   
+  //check if it is a callback query or a string message from user
   if (contents.callback_query) {
     var id_callback = contents.callback_query.from.id;
     if(JSON.stringify(id_callback) == devid) {
       
       var data = contents.callback_query.data;
       
-      selectedcat.setValue(data);
-      sendText(id_callback, "What was this " + selectedcat.getValue() + " item?");
-      //sendText(devid, selectedcat.getValue());
+      
+      //if user clicked inline keyboard for favourite Foods
+      //store callback query as entry and proceed to ask for cost
+      if(selectedcat.getValue() != "empty") {
+       
+        selecteditem.setValue(data);
+        sendText(devid, "How much did " + selecteditem.getValue() + " cost?");
+        
+      }
+      
+      //check if it is for a new entry to be logged
+      else if(selectedcat.getValue() == "empty") {
+        
+        selectedcat.setValue(data); 
+
+        sendText(id_callback, "What was this " + selectedcat.getValue() + " item?");
+        //sendText(devid, selectedcat.getValue());
+        //sendText(devid, data);
+        if(data == "Food") {
+          checkfavs();
+        }
+        
+      }
       
     }
     else {
@@ -116,8 +161,7 @@ function doPost(e) {
     var uid = contents.message.from.id; 
     var text = contents.message.text; 
     var firstName = contents.message.from.first_name;
-    
-    
+
     //id checker
     if(JSON.stringify(uid) == devid) 
     {
@@ -136,8 +180,9 @@ function doPost(e) {
         if(func == "cat"){
           getCats();
         }
+
         
-        //        //alternative method to log with single line input separated by ","
+        //alternative method to log with single line input separated by ","
         //        //function #2
         //        if(func == "log"){
         //          
@@ -157,13 +202,17 @@ function doPost(e) {
         //        }
       }
       
+      //if item is already logged, proceed to accept next entry as cost of the item
       if(selecteditem.getValue() != "empty") {
+
         selectedcost.setValue(text);
         sendText(uid, selecteditem.getValue() + " was logged under " + selectedcat.getValue() + " at the cost of " + selectedcost.getValue());
-        appen("log", selectedcat.getValue(), selecteditem.getValue(), selectedcost.getValue());
+        appen("log", selectedcat.getValue(), selecteditem.getValue().toLowerCase(), selectedcost.getValue());
+
         clearitems();
         
       }
+
       
       if(selectedcat.getValue() != "empty") {
         selecteditem.setValue(text);
