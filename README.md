@@ -8,6 +8,10 @@ This script is run on Google Scripts
 * Extracting information from gsheets to telegram bot chat
 * Dynamic Inline Keyboard based on number of items in specified column in gsheets
 
+## Future Plans
+* To Do List that is interactable (done or not done)
+* Retrieval of specific expenditure by category, or date
+
 ## Images
 ![Telegram Bot](/images/sheetsbot.PNG) 
 ![gsheets](/images/gsheetssheets.PNG) 
