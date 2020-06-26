@@ -24,7 +24,8 @@ This script is run on Google Scripts
 ![gsheets](/images/gsheetssheets2.PNG) 
 
 ![gsheets](/images/gsheetssheets3.PNG) 
-Refer to gsheets link for updated information
+
+Refer to gsheets link under *Resources* for updated information
 
 ## Acknowledgements/References
 * [Wim's Coding YT](https://www.youtube.com/watch?v=24EyItKfm50&t=2s&ab_channel=Wim%27sCodingSecrets)
