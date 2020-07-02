@@ -9,23 +9,25 @@ var devid = "__";
 var categories = [];
 var catqty = 0;
 var settingssheet = SpreadsheetApp.openById(spreadsheeturl).getSheetByName("settings");
-
+var updatebox = SpreadsheetApp.openById(spreadsheeturl).getSheetByName("toDel").getRange(2,4);
 
 function setWebhook() {
   var response = UrlFetchApp.fetch(url + "setWebhook?url=" + webAppURL);
   Logger.log(response.getContentText());
 }
 
-/*
+
 function getMe() {
-var response = UrlFetchApp.fetch(url + "getMe");
-Logger.log(response.getContentText());
+  var response = UrlFetchApp.fetch(url + "getMe");
+  Logger.log(response.getContentText());
 }
-*/
+
+
 
 //send ordinary string message to user
 function sendText(id, text) {
   var response = UrlFetchApp.fetch(url + "sendMessage?chat_id=" + id + "&text=" + text);
+  botmessageid(id);
 }
 
 
@@ -44,6 +46,7 @@ function sendkeeb(chatId, text, keyBoard) {
     }
   };
   UrlFetchApp.fetch(url, data);
+  botmessageid(chatId);
 }
 
 
@@ -80,13 +83,23 @@ function checkfavs() {
   }
   
   sendkeeb(devid, "Here are your favourite foods", keeboard);
-  
 }
 
 
-//function doTest() {
-//  sendText(devid, "*test*");
-//}
+function doTest() {
+  sendText(devid, "*test*");
+}
+
+function botmessageid(cid) {
+  appen("toDel", [cid, updatebox.getValue()+1]);
+  updatelatest(updatebox.getValue()+1);
+}
+
+
+function updatelatest(msgid) {
+  updatebox.setValue(msgid);
+}
+
 
 
 //rudimentary method to create a pseudo chatbot
@@ -99,13 +112,33 @@ function clearitems(){
 }
 
 
-//code to add information directly onto the sheet
-function appen( sheet, category, item, cost) {
+function delmsgs() {
   
+  //    var favqty = settingssheet.getRange(2,8).getValue();
+  //  if (favqty > 5){favqty = 5;}
+  //  var favs = new Array();
+  //  for(var i = 0; i < favqty; i++) {
+  //    favs.push(settingssheet.getRange(1+i,11).getValue());
+  //  }
+  msgcount = SpreadsheetApp.openById(spreadsheeturl).getSheetByName("toDel").getRange(2,5).getValue();
+  
+  for (var i = 3; i < msgcount+3; i++) {
+    var cid = SpreadsheetApp.openById(spreadsheeturl).getSheetByName("toDel").getRange(i, 1);
+    var mid = SpreadsheetApp.openById(spreadsheeturl).getSheetByName("toDel").getRange(i, 2);
+    try { 
+      UrlFetchApp.fetch(url + "deleteMessage?chat_id=" + cid.getValue() + "&message_id=" + mid.getValue()); 
+      cid.clear(); mid.clear();
+    } catch(err) {
+      cid.clear(); mid.clear();
+    }
+  }
+}
+
+
+function appen(sheet, items) {
   var spreads = SpreadsheetApp.openById(spreadsheeturl);
-  var selectsheet = spreads.getSheetByName(sheet) ? spreads.getSheetByName(sheet) : spreads.insertSheet(sheet); 
-  selectsheet.appendRow([new Date(), category, item, cost]);
-  
+  var sheettoappen = spreads.getSheetByName(sheet) ? spreads.getSheetByName(sheet) : spreads.insertSheet(sheet);
+  sheettoappen.appendRow(items);
 }
 
 
@@ -122,7 +155,7 @@ function doPost(e) {
   
   //check if it is a callback query or a string message from user
   if (contents.callback_query) {
-    var id_callback = contents.callback_query.from.id;
+    var id_callback = contents.callback_query.from.id;https://api.telegram.org/bot1191160695:AAGZe0eg-GYkU98FMYAxyNt62yU2mVltxVI/getUpdates
     if(JSON.stringify(id_callback) == devid) {
       
       var data = contents.callback_query.data;
@@ -131,7 +164,7 @@ function doPost(e) {
       //if user clicked inline keyboard for favourite Foods
       //store callback query as entry and proceed to ask for cost
       if(selectedcat.getValue() != "empty") {
-       
+        
         selecteditem.setValue(data);
         sendText(devid, "How much did " + selecteditem.getValue() + " cost?");
         
@@ -141,7 +174,7 @@ function doPost(e) {
       else if(selectedcat.getValue() == "empty") {
         
         selectedcat.setValue(data); 
-
+        
         sendText(id_callback, "What was this " + selectedcat.getValue() + " item?");
         //sendText(devid, selectedcat.getValue());
         //sendText(devid, data);
@@ -159,9 +192,12 @@ function doPost(e) {
     
   } else if (contents.message) {
     var uid = contents.message.from.id; 
+    var mid = contents.message.message_id;
     var text = contents.message.text; 
     var firstName = contents.message.from.first_name;
-
+    appen("toDel", [uid, mid]);
+    updatelatest(mid);
+    
     //id checker
     if(JSON.stringify(uid) == devid) 
     {
@@ -180,7 +216,7 @@ function doPost(e) {
         if(func == "cat"){
           getCats();
         }
-
+        
         
         //alternative method to log with single line input separated by ","
         //        //function #2
@@ -204,15 +240,17 @@ function doPost(e) {
       
       //if item is already logged, proceed to accept next entry as cost of the item
       if(selecteditem.getValue() != "empty") {
-
+        
         selectedcost.setValue(text);
+        var items = [new Date(), selectedcat.getValue(), selecteditem.getValue().toLowerCase(), selectedcost.getValue() ];
+        appen("log", items);
         sendText(uid, selecteditem.getValue() + " was logged under " + selectedcat.getValue() + " at the cost of " + selectedcost.getValue());
-        appen("log", selectedcat.getValue(), selecteditem.getValue().toLowerCase(), selectedcost.getValue());
-
+        
+        delmsgs();
         clearitems();
         
       }
-
+      
       
       if(selectedcat.getValue() != "empty") {
         selecteditem.setValue(text);
