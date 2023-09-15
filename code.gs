@@ -155,7 +155,7 @@ function doPost(e) {
   
   //check if it is a callback query or a string message from user
   if (contents.callback_query) {
-    var id_callback = contents.callback_query.from.id;https://api.telegram.org/bot1191160695:AAGZe0eg-GYkU98FMYAxyNt62yU2mVltxVI/getUpdates
+    var id_callback = contents.callback_query.from.id;
     if(JSON.stringify(id_callback) == devid) {
       
       var data = contents.callback_query.data;
